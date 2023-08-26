@@ -2,10 +2,7 @@ module github.com/raulaguila/go-blemultimeter
 
 go 1.21
 
-require (
-	github.com/raulaguila/go-multimeter v1.0.1
-	tinygo.org/x/bluetooth v0.7.0
-)
+require tinygo.org/x/bluetooth v0.7.0
 
 require (
 	github.com/fatih/structs v1.1.0 // indirect

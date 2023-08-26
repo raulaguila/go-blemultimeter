@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/raulaguila/go-multimeter/pkg/bluetooth/enum"
+	"github.com/raulaguila/go-blemultimeter/pkg/bluetooth/enum"
 	"tinygo.org/x/bluetooth"
 )
 
