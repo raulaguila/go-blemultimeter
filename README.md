@@ -24,7 +24,7 @@ Tested with Linux using golang 1.20.
 ### Install:
 
 ```bash
-go install github.com/raulaguila/go-blemultimeter/cmd/go-multimeter@v0.0.1
+go install github.com/raulaguila/go-blemultimeter/cmd/go-multimeter@v0.0.2
 ```
 
 ### Exec:
