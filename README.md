@@ -20,3 +20,15 @@ Tested with Linux using golang 1.20.
 - You can also pass the **true** flag after "ow18e" or "fs9721" to print the received array and the respective value.
 - Watch terminal.
 - Press **ENTER** to disconnect bluetooth and close the program.
+
+### Install:
+
+```bash
+go install github.com/raulaguila/go-blemultimeter/cmd/go-multimeter@v0.0.1
+```
+
+### Exec:
+
+```bash
+go-multimeter <ow18e or fs9721>
+```

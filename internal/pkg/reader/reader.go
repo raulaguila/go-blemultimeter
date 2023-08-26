@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/raulaguila/go-multimeter/internal/domain"
-	"github.com/raulaguila/go-multimeter/pkg/alert"
-	"github.com/raulaguila/go-multimeter/pkg/bluetooth"
+	"github.com/raulaguila/go-blemultimeter/internal/domain"
+	"github.com/raulaguila/go-blemultimeter/pkg/alert"
+	"github.com/raulaguila/go-blemultimeter/pkg/bluetooth"
 )
 
 type Reader struct {

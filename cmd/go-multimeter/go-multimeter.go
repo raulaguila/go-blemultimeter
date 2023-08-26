@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/raulaguila/go-multimeter/internal/pkg/reader"
-	"github.com/raulaguila/go-multimeter/pkg/alert"
-	"github.com/raulaguila/go-multimeter/pkg/multimeter/fs9721"
-	"github.com/raulaguila/go-multimeter/pkg/multimeter/owon"
+	"github.com/raulaguila/go-blemultimeter/internal/pkg/reader"
+	"github.com/raulaguila/go-blemultimeter/pkg/alert"
+	"github.com/raulaguila/go-blemultimeter/pkg/multimeter/fs9721"
+	"github.com/raulaguila/go-blemultimeter/pkg/multimeter/owon"
 )
 
 var myReader *reader.Reader

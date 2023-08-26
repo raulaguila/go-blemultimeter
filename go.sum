@@ -35,6 +35,8 @@ github.com/peterbourgon/ff/v3 v3.1.2/go.mod h1:XNJLY8EIl6MjMVjBS4F0+G0LYoAqs0DTa
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/raulaguila/go-multimeter v1.0.1 h1:tdxxh5fMVhH2MTruHJ/9h/2wuEcXTCg4gGEPNaOcgFs=
+github.com/raulaguila/go-multimeter v1.0.1/go.mod h1:bu9wcR9xLLViQkkanFgwJS9h/ZweGvSivYjD86donzs=
 github.com/sago35/go-bdf v0.0.0-20200313142241-6c17821c91c4/go.mod h1:rOebXGuMLsXhZAC6mF/TjxONsm45498ZyzVhel++6KM=
 github.com/saltosystems/winrt-go v0.0.0-20230510070731-e096b9afa761/go.mod h1:UvKm1lyhg+8ehk99i8g5Q7AX1LXUJgks0lRyAkG/ahQ=
 github.com/saltosystems/winrt-go v0.0.0-20230710111611-a39229b5054c h1:GmnSNqDHyCqwGT5a3cOhMO8+yXzQW7VUdUGFAOSaEkw=
