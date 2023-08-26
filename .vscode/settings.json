@@ -1,0 +1,27 @@
+{
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": true,
+
+  "window.zoomLevel": -1,
+  // "window.autoDetectColorScheme": true,
+
+  "editor.fontSize": 13,
+
+  "workbench.editor.tabCloseButton": "off",
+  "workbench.editor.tabSizing": "shrink",
+
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.associations": {
+    "*.env*": "env"
+  },
+
+  "[go]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "golang.go"
+  },
+  "gopls": {
+    "ui.semanticTokens": true,
+    "formatting.gofumpt": true
+  }
+}
