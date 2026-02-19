@@ -3,6 +3,7 @@ package owon
 import (
 	"fmt"
 	"log"
+	"strings"
 )
 
 const (
@@ -17,26 +18,37 @@ const (
 	resistance string = "01"
 	continuity string = "10"
 	ncv        string = "11"
+
+	requiredOW18EFrameLen = 6
 )
 
 type OW18E struct{}
 
-func (m *OW18E) getBinArray(bytearray []byte) (str []string) {
-	for _, b := range bytearray {
+func (m *OW18E) getBinArray(byteArray []byte) (str []string) {
+	for _, b := range byteArray {
 		str = append(str, fmt.Sprintf("%08b", b))
 	}
 	return
 }
 
-func (m *OW18E) ProccessArray(bytearray []byte) (float64, string, []string) {
-	binArray := m.getBinArray(bytearray) // Convert byte array to bits string
+func (m *OW18E) ProcessArray(byteArray []byte) (float64, string, []string) {
+	if len(byteArray) < requiredOW18EFrameLen {
+		log.Printf("invalid OW18E frame length: got %d, need at least %d", len(byteArray), requiredOW18EFrameLen)
+		return 0, "", nil
+	}
+
+	if len(byteArray) > requiredOW18EFrameLen {
+		byteArray = byteArray[:requiredOW18EFrameLen]
+	}
+
+	binArray := m.getBinArray(byteArray) // Convert byte array to bits string
 
 	mRange := binArray[0][5:]
 	unity := binArray[0][2:5]
 	finalFunction := binArray[0][:2] + binArray[1][6:]
 	function := binArray[0][:2]
 
-	value := m.extractValue(bytearray, mRange)
+	value := m.extractValue(byteArray, mRange)
 	unit := m.extractUnit(unity, finalFunction)
 	flags := m.extractFlags(binArray, finalFunction, function, mRange)
 
@@ -73,14 +85,14 @@ func (m *OW18E) extractValue(byteArray []byte, mRange string) float64 {
 	case "111": // L
 		return 0
 	default:
-		log.Printf("\tRange not tracked: %v\n", mRange)
+		log.Printf("\tRange not tracked: %v", mRange)
 	}
 
 	return 0
 }
 
 func (m *OW18E) extractUnit(unity string, finalFunction string) string {
-	arrUnits := [][2]interface{}{
+	arrUnits := [][2]any{
 		{unity == "001", "n"},                    // nano
 		{unity == "010", "µ"},                    // micro
 		{unity == "011", "m"},                    // mili
@@ -93,7 +105,7 @@ func (m *OW18E) extractUnit(unity string, finalFunction string) string {
 		{finalFunction == ac+continuity, "ºF"},   // Temp fahrenheit
 		{finalFunction == ac+resistance, "F"},    // Capacitance Measure
 		{finalFunction == ac+voltage, "V"},       // AC Voltage Measure
-		{finalFunction == ac+ncv, "NVC"},         // NVC Measure
+		{finalFunction == ac+ncv, "NCV"},         // NCV Measure
 		{finalFunction == diod+continuity, "V"},  // Diode test
 		{finalFunction == diod+resistance, "Hz"}, // Frequence
 		{finalFunction == diod+voltage, "A"},     // Current Measure
@@ -101,32 +113,32 @@ func (m *OW18E) extractUnit(unity string, finalFunction string) string {
 		{finalFunction == cont+resistance, "%"},  // Percentage
 	}
 
-	unit := ""
+	var unit strings.Builder
 	for _, item := range arrUnits {
 		if item[0].(bool) {
-			unit += item[1].(string)
+			unit.WriteString(item[1].(string))
 		}
 	}
 
-	return unit
+	return unit.String()
 }
 
 func (m *OW18E) extractFlags(binArray []string, finalFunction, function, mRange string) []string {
-	arrFlags := [][2]interface{}{
-		{function == dc, "DC"},                                // DC Voltage Measure
-		{function == ac, "AC"},                                // AC Voltage Measure
-		{mRange == "111", "L"},                                // L
-		{finalFunction == dc+continuity, "Temp celsius"},      // Temp celsius
-		{finalFunction == ac+continuity, "Temp fahrenheit"},   // Temp fahrenheit
-		{finalFunction == ac+resistance, "Capacity"},          // Capacitance Measure
-		{finalFunction == ac+ncv, "NCV Measure"},              // NCV Measure
-		{finalFunction == diod+continuity, "Diode test"},      // Diode test
-		{finalFunction == cont+continuity, "Continuity test"}, // Continuity test
-		{finalFunction == cont+resistance, "Percentage"},      // Percentage
-		{binArray[2][4] == '1', "Low Battery"},                // Low Battery
-		{binArray[2][5] == '1', "Auto Range"},                 // Auto Range
-		{binArray[2][6] == '1', "Relative Mode"},              // Relative Mode
-		{binArray[2][7] == '1', "Hold"},                       // Hold
+	arrFlags := [][2]any{
+		{function == dc, "DC"},                              // DC Voltage Measure
+		{function == ac, "AC"},                              // AC Voltage Measure
+		{mRange == "111", "L"},                              // L
+		{finalFunction == dc+continuity, "Temp celsius"},    // Temp celsius
+		{finalFunction == ac+continuity, "Temp fahrenheit"}, // Temp fahrenheit
+		{finalFunction == ac+resistance, "Capacity"},        // Capacitance Measure
+		{finalFunction == ac+ncv, "NCV Measure"},            // NCV Measure
+		{finalFunction == diod+continuity, "Diode test"},    // Diode test
+		{finalFunction == cont+continuity, "Continuity test"},
+		{finalFunction == cont+resistance, "Percentage"},
+		{binArray[2][4] == '1', "Low Battery"}, // Low Battery
+		{binArray[2][5] == '1', "Auto Range"},  // Auto Range
+		{binArray[2][6] == '1', "Relative Mode"},
+		{binArray[2][7] == '1', "Hold"},
 	}
 
 	flags := []string{}

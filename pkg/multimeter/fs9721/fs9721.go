@@ -6,26 +6,26 @@ import (
 	"strings"
 )
 
-type Fs9721 struct {
-	bytearray     []string
-	originalarray []byte
+type FS9721 struct {
+	nibbles  []string
+	rawBytes []byte
 }
 
-func (m *Fs9721) ProccessArray(bytearray []byte) (value float64, unit string, flags []string) {
-	switch len(bytearray) {
+func (m *FS9721) ProcessArray(byteArray []byte) (value float64, unit string, flags []string) {
+	switch len(byteArray) {
 	case 8:
-		m.bytearray = m.bytearray[:0]
-		m.originalarray = m.originalarray[:0]
+		m.nibbles = m.nibbles[:0]
+		m.rawBytes = m.rawBytes[:0]
 		fallthrough
 	case 6:
-		for _, b := range bytearray {
+		for _, b := range byteArray {
 			aux := fmt.Sprintf("%08b", b)
-			m.bytearray = append(m.bytearray, aux[len(aux)-4:])
-			m.originalarray = append(m.originalarray, b)
+			m.nibbles = append(m.nibbles, aux[len(aux)-4:])
+			m.rawBytes = append(m.rawBytes, b)
 		}
 
-		if len(m.bytearray) == 14 {
-			str := strings.Join(m.bytearray, "")
+		if len(m.nibbles) == 14 {
+			str := strings.Join(m.nibbles, "")
 
 			value = m.extractValue(str)
 			unit = m.extractUnit(str)
@@ -36,7 +36,7 @@ func (m *Fs9721) ProccessArray(bytearray []byte) (value float64, unit string, fl
 	return value, unit, flags
 }
 
-func (m *Fs9721) extractValue(str string) (ret float64) {
+func (m *FS9721) extractValue(str string) (ret float64) {
 	digits := map[string]string{
 		"1111101": "0",
 		"0000101": "1",
@@ -62,21 +62,22 @@ func (m *Fs9721) extractValue(str string) (ret float64) {
 		str[29:36], // Digito 04
 	}
 
-	measured := "0"
+	var measured strings.Builder
+	measured.WriteString("0")
 	for i, digit := range arrDigits {
 		switch i % 2 {
 		case 0:
 			if val, exist := digits[digit]; exist {
-				measured += val
+				measured.WriteString(val)
 			}
 		case 1:
 			if digit == "1" {
-				measured += "."
+				measured.WriteString(".")
 			}
 		}
 	}
 
-	ret, _ = strconv.ParseFloat(measured, 64)
+	ret, _ = strconv.ParseFloat(measured.String(), 64)
 	if str[4:5] == "1" {
 		ret = ret * -1
 	}
@@ -84,8 +85,8 @@ func (m *Fs9721) extractValue(str string) (ret float64) {
 	return
 }
 
-func (m *Fs9721) extractUnit(str string) (unit string) {
-	arrUnits := [][2]interface{}{
+func (m *FS9721) extractUnit(str string) (unit string) {
+	arrUnits := [][2]any{
 		{str[37:38] == "1", "n"},  // nano
 		{str[36:37] == "1", "µ"},  // micro
 		{str[38:39] == "1", "k"},  // kilo
@@ -109,8 +110,8 @@ func (m *Fs9721) extractUnit(str string) (unit string) {
 	return
 }
 
-func (m *Fs9721) extractFlags(str string) (flags []string) {
-	arrFlags := [][2]interface{}{
+func (m *FS9721) extractFlags(str string) (flags []string) {
+	arrFlags := [][2]any{
 		{str[0:1] == "1", "AC"},
 		{str[1:2] == "1" && str[53:54] == "0", "DC"},
 		{str[2:3] == "1", "Auto"},

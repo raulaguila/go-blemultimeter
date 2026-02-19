@@ -1,7 +1,7 @@
 package domain
 
 type Multimeter interface {
-	ProccessArray(bytearray []byte) (float64, string, []string)
+	ProcessArray(byteArray []byte) (float64, string, []string)
 }
 
 type MultimeterCommands interface {
